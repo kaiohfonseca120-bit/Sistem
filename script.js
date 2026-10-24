@@ -235,6 +235,15 @@ window.salvarProduto = async function(e) {
     }
 };
 
+// CONTROLE DO MENU MOBILE (ABRIR / FECHAR)
+function toggleMenuMobile() {
+    const sidebar = document.getElementById('sidebar-mobile');
+    if (sidebar) {
+        // Alterna entre mostrar (translate-x-0) e esconder (-translate-x-full)
+        sidebar.classList.toggle('-translate-x-full');
+    }
+}
+
 // 6. ALTERNAR ABAS
 function alternarVisualizacao(rota) {
     const viewEstoque = document.getElementById('view-estoque');
@@ -243,36 +252,32 @@ function alternarVisualizacao(rota) {
     const btnEstoque = document.getElementById('btn-nav-estoque');
     const btnFicha = document.getElementById('btn-nav-ficha');
 
-    // Remove o estilo ativo de todos os botões principais
-    if (btnEstoque) {
-        btnEstoque.className = "w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors";
-    }
-    if (btnFicha) {
-        btnFicha.className = "w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors";
-    }
+    const estiloInativo = "w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors";
+    const estiloAtivo = "w-full flex items-center gap-3 p-2.5 text-[#d946ef] bg-[#27272a] rounded-xl transition-colors";
+
+    if (btnEstoque) btnEstoque.className = estiloInativo;
+    if (btnFicha) btnFicha.className = estiloInativo;
 
     if (rota === 'estoque') {
         if (viewEstoque) viewEstoque.classList.remove('hidden');
         if (viewFicha) viewFicha.classList.add('hidden');
-        
-        // Ativa o estilo roxo no botão de Estoque
-        if (btnEstoque) {
-            btnEstoque.className = "w-full flex items-center gap-3 p-2.5 text-[#d946ef] bg-[#27272a] rounded-xl transition-colors";
-        }
+        if (btnEstoque) btnEstoque.className = estiloAtivo;
     } else if (rota === 'ficha') {
         if (viewEstoque) viewEstoque.classList.add('hidden');
         if (viewFicha) viewFicha.classList.remove('hidden');
-        
-        // Ativa o estilo roxo no botão de Ficha Técnica
-        if (btnFicha) {
-            btnFicha.className = "w-full flex items-center gap-3 p-2.5 text-[#d946ef] bg-[#27272a] rounded-xl transition-colors";
-        }
+        if (btnFicha) btnFicha.className = estiloAtivo;
         carregarReceitasFicha();
     } else {
-        // Se clicar em outras abas que ainda não têm view própria
         alert(`A aba "${rota}" será aberta em breve!`);
     }
+
+    // Fecha o menu automaticamente no telemóvel ao escolher uma aba
+    const sidebar = document.getElementById('sidebar-mobile');
+    if (sidebar && window.innerWidth < 768) {
+        sidebar.classList.add('-translate-x-full');
+    }
 }
+
 
 // 7. CARREGAR RECEITAS NO SELETOR
 async function carregarReceitasFicha() {
