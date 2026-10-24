@@ -18,7 +18,23 @@
 
 
 
-<!-- BARRA DE NAVEGAÇÃO INFERIOR MOBILE (Fixa no rodapé para telas pequenas) -->
+<!-- CABEÇALHO FIXO NO TOPO DO MOBILE (Identificação da aplicação) -->
+    <header class="md:hidden fixed top-0 left-0 right-0 h-14 bg-[#18181b] border-b border-[#27272a] flex items-center justify-between px-4 z-30 shadow-md">
+        <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-[#a21caf] flex items-center justify-center text-white font-extrabold text-xs">
+                K
+            </div>
+            <span class="font-bold text-white text-base tracking-wide">Kero Salgados</span>
+        </div>
+
+        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 p-[2px]">
+            <div class="w-full h-full bg-[#18181b] rounded-full flex items-center justify-center">
+                <span class="text-xs font-bold text-white">R</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- BARRA DE NAVEGAÇÃO INFERIOR MOBILE (Fixa no rodapé) -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#18181b] border-t border-[#27272a] flex items-center justify-around z-40 px-2 shadow-2xl">
         <button onclick="alternarVisualizacao('inicio')" id="btn-nav-inicio-mob" class="flex flex-col items-center justify-center w-full py-1 text-[#a1a1aa] hover:text-white transition-colors">
             <i data-lucide="layout-grid" class="w-5 h-5"></i>
@@ -40,13 +56,13 @@
             <span class="text-[10px] font-medium mt-1">Ficha Tec.</span>
         </button>
 
-        <button onclick="alternarVisualizacao('vendas')" id="btn-nav-vendas-mob" class="flex flex-col items-center justify-center w-full py-1 text-[#a1a1aa] hover:text-white hover:text-white transition-colors">
+        <button onclick="alternarVisualizacao('vendas')" id="btn-nav-vendas-mob" class="flex flex-col items-center justify-center w-full py-1 text-[#a1a1aa] hover:text-white transition-colors">
             <i data-lucide="shopping-cart" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium mt-1">Vendas</span>
         </button>
     </nav>
 
-    <!-- SIDEBAR DESKTOP (Aparece apenas em PC / Tablet - hidden em mobile) -->
+    <!-- SIDEBAR DESKTOP (Fixa na esquerda no PC) -->
     <aside class="hidden md:flex w-16 hover:w-56 bg-[#18181b] border-r border-[#27272a] flex-col justify-between items-center py-4 z-20 shrink-0 transition-all duration-300 group overflow-hidden">
         <div class="flex flex-col items-center space-y-3 w-full px-2">
             <button onclick="alternarVisualizacao('inicio')" id="btn-nav-inicio" class="w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors">
@@ -88,10 +104,8 @@
         </div>
     </aside>
 
-
-    
-    <!-- CONTEÚDO PRINCIPAL (Espaço extra no rodapé do mobile pb-16 para não cobrir itens com a barra) -->
-    <main class="flex-1 flex flex-col h-full overflow-hidden bg-[#121214] pb-16 md:pb-0">        
+    <!-- CONTEÚDO PRINCIPAL (Com margem pt-14 no topo para não ficar por baixo do cabeçalho e pb-16 para não tapar o rodapé) -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-[#121214] pt-14 pb-16 md:pt-0 md:pb-0">  
         <!-- VIEW DO ESTOQUE -->
         <div id="view-estoque" class="flex-1 flex flex-col h-full overflow-hidden">
             <header class="p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[#1f1f23]">
