@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão - Estoque</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #121214; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+    </style>
+</head>
+<body class="bg-[#121214] text-gray-200 font-sans antialiased flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR -->
+    <!-- SIDEBAR -->
+    <aside class="w-16 hover:w-56 bg-[#18181b] border-r border-[#27272a] flex flex-col justify-between items-center py-4 z-20 shrink-0 transition-all duration-300 group overflow-hidden">
+        <div class="flex flex-col items-center space-y-3 w-full px-2">
+            
+            <!-- Botão 1: Dashboard / Início -->
+            <button onclick="alternarVisualizacao('inicio')" id="btn-nav-inicio" class="w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors">
+                <i data-lucide="layout-grid" class="w-5 h-5 shrink-0"></i>
+                <span class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Dashboard</span>
+            </button>
+
+            <!-- Botão 2: Cozinha / Receitas -->
+            <button onclick="alternarVisualizacao('cozinha')" id="btn-nav-cozinha" class="w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors">
+                <i data-lucide="utensils" class="w-5 h-5 shrink-0"></i>
+                <span class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Cozinha</span>
+            </button>
+
+            <!-- Botão 3: Estoque -->
+            <button id="btn-nav-estoque" onclick="alternarVisualizacao('estoque')" class="w-full flex items-center gap-3 p-2.5 text-[#d946ef] bg-[#27272a] rounded-xl transition-colors">
+                <i data-lucide="store" class="w-5 h-5 shrink-0"></i>
+                <span class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Estoque</span>
+            </button>
+
+            <!-- Botão 4: Ficha Técnica -->
+            <button id="btn-nav-ficha" onclick="alternarVisualizacao('ficha')" class="w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors">
+                <i data-lucide="clipboard-list" class="w-5 h-5 shrink-0"></i>
+                <span class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Ficha Técnica</span>
+            </button>
+
+            <!-- Botão 5: Carrinho / Vendas -->
+            <button onclick="alternarVisualizacao('vendas')" id="btn-nav-vendas" class="w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors">
+                <i data-lucide="shopping-cart" class="w-5 h-5 shrink-0"></i>
+                <span class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Vendas</span>
+            </button>
+
+            <!-- Botão 6: Financeiro -->
+            <button onclick="alternarVisualizacao('financeiro')" id="btn-nav-financeiro" class="w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors">
+                <i data-lucide="dollar-sign" class="w-5 h-5 shrink-0"></i>
+                <span class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Financeiro</span>
+            </button>
+
+        </div>
+
+        <div class="px-3 w-full flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 p-[2px] shrink-0">
+                <div class="w-full h-full bg-[#18181b] rounded-full flex items-center justify-center"><span class="text-xs font-bold text-white">R</span></div>
+            </div>
+            <span class="text-xs font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">R&A Bolos E Salgados</span>
+        </div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-[#121214]">
+        
+        <!-- VIEW DO ESTOQUE -->
+        <div id="view-estoque" class="flex-1 flex flex-col h-full overflow-hidden">
+            <header class="p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[#1f1f23]">
+                <div>
+                    <h1 class="text-2xl font-bold text-white tracking-wide">Estoque</h1>
+                    <p id="status-conexao" class="text-xs text-amber-400 font-medium mt-1">● Conectando ao Supabase...</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <div class="relative flex-1 md:w-64">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#71717a]"></i>
+                        <input type="text" id="input-busca" oninput="filtrarProdutos()" placeholder="Procurar produto..." class="w-full bg-[#27272a] text-sm text-gray-200 placeholder-[#71717a] pl-9 pr-4 py-2 rounded-lg border border-transparent focus:border-[#d946ef] focus:outline-none">
+                    </div>
+                    <button onclick="abrirModalCadastro()" class="flex items-center gap-2 bg-[#a21caf] hover:bg-[#86198f] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-lg">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Cadastrar Item</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-auto px-6 py-4">
+                <table class="w-full text-left text-sm text-[#a1a1aa] border-separate border-spacing-y-1">
+                    <thead class="text-xs uppercase text-[#71717a] font-semibold tracking-wider sticky top-0 bg-[#121214] z-10 cursor-pointer">
+                        <tr>
+                            <th onclick="ordenarTabela('nome')" class="pb-3 pl-2 hover:text-white transition-colors">NOME ↕</th>
+                            <th onclick="ordenarTabela('quantidade')" class="pb-3 text-right hover:text-white transition-colors">QTD ↕</th>
+                            <th onclick="ordenarTabela('classe')" class="pb-3 pl-6 hover:text-white transition-colors">CLASSE ↕</th>
+                            <th onclick="ordenarTabela('categoria')" class="pb-3 hover:text-white transition-colors">CATEGORIA ↕</th>
+                            <th onclick="ordenarTabela('custo')" class="pb-3 text-right hover:text-white transition-colors">CUSTO UN. ↕</th>
+                            <th onclick="ordenarTabela('preco')" class="pb-3 text-right hover:text-white transition-colors">PREÇO VENDA ↕</th>
+                            <th class="pb-3 text-right">LUCRO UN.</th>
+                            <th class="pb-3 text-right">MARGEM</th>
+                            <th class="pb-3 text-right pr-2">CUSTO TOTAL</th>
+                            <th class="pb-3 text-center">AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-produtos" class="divide-y divide-[#1f1f23]/40"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW DA FICHA TÉCNICA -->
+        <div id="view-ficha-tecnica" class="flex-1 flex flex-col h-full overflow-y-auto p-6 hidden">
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-4 border-b border-[#1f1f23]">
+                <div>
+                    <h1 class="text-2xl font-bold text-white tracking-wide">Ficha Técnica</h1>
+                    <p id="status-conexao-ficha" class="text-xs text-amber-400 font-medium mt-1">● Pronto</p>
+                </div>
+            </header>
+
+            <!-- SELETOR DE RECEITA -->
+            <div class="mb-6">
+                <label class="block text-xs font-semibold text-gray-400 mb-1.5">Selecionar Receita</label>
+                <div class="relative max-w-xl">
+                    <select id="select-receita-ficha" onchange="mudarReceitaFicha(this.value)" class="w-full bg-[#27272a] text-white p-3 pr-10 rounded-xl border border-transparent focus:border-[#d946ef] focus:outline-none text-sm font-medium appearance-none cursor-pointer">
+                        <option value="">Selecione uma receita...</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                </div>
+            </div>
+
+            <!-- VALOR DO RENDIMENTO -->
+            <div class="mb-8">
+                <h2 id="ft-rendimento-destaque" class="text-5xl font-extrabold text-white tracking-tight">
+                    Rendimento 0,00
+                </h2>
+            </div>
+
+            <!-- TITULO + CUSTO TOTAL + CUSTO POR KG + BOTAO ADICIONAR -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-3 border-b border-zinc-800/60">
+                <div class="flex flex-wrap items-center gap-3">
+                    <h3 id="ft-nome-receita" class="text-lg font-bold text-white tracking-wide">
+                        Selecione uma Receita
+                    </h3>
+                    <span id="ft-custo-total" class="text-[#d946ef] font-bold text-lg">R$ 0,00</span>
+                    <span id="ft-custo-por-kg" class="bg-[#d946ef]/10 text-[#d946ef] border border-[#d946ef]/30 text-xs font-bold px-3 py-1 rounded-full">
+                        R$ 0,00 / Kg
+                    </span>
+                </div>
+
+                <button onclick="abrirModalAdicionarIngrediente()" class="flex items-center gap-2 bg-[#a21caf] hover:bg-[#86198f] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors shadow-lg self-start md:self-auto shrink-0">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Adicionar Ingredientes</span>
+                </button>
+            </div>
+
+            <!-- LISTA DE INGREDIENTES -->
+            <div id="lista-ingredientes-container" class="space-y-3 max-w-4xl">
+                <p class="text-sm text-zinc-500">Selecione uma receita para ver os ingredientes.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL ADICIONAR INGREDIENTE -->
+    <div id="modal-adicionar-ingrediente" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-[#18181b] border border-zinc-800 rounded-2xl w-full max-w-md p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-white tracking-wide">Adicionar Ingrediente</h3>
+                <button onclick="fecharModalAdicionarIngrediente()" class="text-zinc-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="form-adicionar-ingrediente" onsubmit="salvarIngredienteFicha(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1.5">Produto do Estoque</label>
+                    <div class="relative">
+                        <select id="select-produto-estoque" required class="w-full bg-[#27272a] text-white p-3 pr-10 rounded-xl border border-transparent focus:border-[#d946ef] focus:outline-none text-sm font-medium appearance-none cursor-pointer">
+                            <option value="">Selecione um produto...</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1.5">Quantidade Utilizada na Receita</label>
+                    <input type="number" step="any" id="input-qtd-ingrediente" required placeholder="Ex: 1.500" class="w-full bg-[#27272a] text-white p-3 rounded-xl border border-transparent focus:border-[#d946ef] focus:outline-none text-sm font-medium">
+                </div>
+
+                <div class="flex justify-end gap-3 mt-6 pt-2">
+                    <button type="button" onclick="fecharModalAdicionarIngrediente()" class="px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl text-sm font-medium transition-colors">Cancelar</button>
+                    <button type="submit" class="px-4 py-2.5 bg-[#a21caf] hover:bg-[#86198f] text-white rounded-xl text-sm font-medium transition-colors shadow-lg">Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CADASTRO / EDIÇÃO DE ESTOQUE -->
+    <div id="modal-produto" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-[#18181b] border border-[#27272a] rounded-xl w-full max-w-lg p-6 shadow-2xl relative max-h-[90vh] flex flex-col">
+            <h2 id="modal-titulo" class="text-xl font-bold text-white mb-4">Cadastrar Novo Item</h2>
+            <form id="form-produto" onsubmit="salvarProduto(event)" class="flex flex-col flex-1 overflow-hidden">
+                <input type="hidden" id="prod-id">
+                <div id="form-inputs-dinamicos" class="space-y-4 overflow-y-auto pr-2 max-h-[60vh]"></div>
+                <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-[#27272a]">
+                    <button type="button" onclick="fecharModalCadastro()" class="px-4 py-2 bg-[#27272a] hover:bg-[#3f3f46] text-gray-300 text-sm rounded-lg transition-colors">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-[#a21caf] hover:bg-[#86198f] text-white text-sm font-medium rounded-lg shadow-lg transition-colors">Salvar no Supabase</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
