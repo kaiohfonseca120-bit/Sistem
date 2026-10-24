@@ -235,53 +235,54 @@ window.salvarProduto = async function(e) {
     }
 };
 
-// CONTROLE DO MENU MOBILE (ABRIR / FECHAR COM BACKDROP)
-function toggleMenuMobile() {
-    const sidebar = document.getElementById('sidebar-mobile');
-    const backdrop = document.getElementById('backdrop-mobile');
-    
-    if (sidebar && backdrop) {
-        sidebar.classList.toggle('-translate-x-full');
-        backdrop.classList.toggle('hidden');
-    }
-}
 
 // 6. ALTERNAR ABAS
+// ALTERNAR ABAS E ATUALIZAR ESTILO DA BARRA LATERAL (PC) E BOTTOM BAR (MOBILE)
 function alternarVisualizacao(rota) {
     const viewEstoque = document.getElementById('view-estoque');
     const viewFicha = document.getElementById('view-ficha-tecnica');
     
+    // Botões Desktop
     const btnEstoque = document.getElementById('btn-nav-estoque');
     const btnFicha = document.getElementById('btn-nav-ficha');
 
+    // Botões Mobile
+    const btnEstoqueMob = document.getElementById('btn-nav-estoque-mob');
+    const btnFichaMob = document.getElementById('btn-nav-ficha-mob');
+
+    // Estilos Desktop
     const estiloInativo = "w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors";
     const estiloAtivo = "w-full flex items-center gap-3 p-2.5 text-[#d946ef] bg-[#27272a] rounded-xl transition-colors";
 
+    // Estilos Mobile
+    const estiloMobInativo = "flex flex-col items-center justify-center w-full py-1 text-[#a1a1aa] transition-colors";
+    const estiloMobAtivo = "flex flex-col items-center justify-center w-full py-1 text-[#d946ef] font-bold transition-colors";
+
+    // Reseta todos
     if (btnEstoque) btnEstoque.className = estiloInativo;
     if (btnFicha) btnFicha.className = estiloInativo;
+    if (btnEstoqueMob) btnEstoqueMob.className = estiloMobInativo;
+    if (btnFichaMob) btnFichaMob.className = estiloMobInativo;
 
     if (rota === 'estoque') {
         if (viewEstoque) viewEstoque.classList.remove('hidden');
         if (viewFicha) viewFicha.classList.add('hidden');
+        
         if (btnEstoque) btnEstoque.className = estiloAtivo;
+        if (btnEstoqueMob) btnEstoqueMob.className = estiloMobAtivo;
+
     } else if (rota === 'ficha') {
         if (viewEstoque) viewEstoque.classList.add('hidden');
         if (viewFicha) viewFicha.classList.remove('hidden');
+        
         if (btnFicha) btnFicha.className = estiloAtivo;
+        if (btnFichaMob) btnFichaMob.className = estiloMobAtivo;
+        
         carregarReceitasFicha();
     } else {
         alert(`A aba "${rota}" será aberta em breve!`);
     }
-
-    // Fecha a sidebar e esconde o backdrop automaticamente no telemóvel
-    const sidebar = document.getElementById('sidebar-mobile');
-    const backdrop = document.getElementById('backdrop-mobile');
-    if (sidebar && window.innerWidth < 768) {
-        sidebar.classList.add('-translate-x-full');
-        if (backdrop) backdrop.classList.add('hidden');
-    }
 }
-
 // 7. CARREGAR RECEITAS NO SELETOR
 async function carregarReceitasFicha() {
     const selectReceita = document.getElementById('select-receita-ficha');

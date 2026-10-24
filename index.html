@@ -17,62 +17,81 @@
 <body class="bg-[#121214] text-gray-200 font-sans antialiased flex h-screen overflow-hidden">
 
 
-    <!-- SIDEBAR -->
-<div id="backdrop-mobile" onclick="toggleMenuMobile()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden transition-opacity"></div>
 
-    <!-- SIDEBAR (Com largura ideal para mobile e o efeito gaveta) -->
-    <aside id="sidebar-mobile" class="fixed md:static inset-y-0 left-0 w-64 md:w-16 md:hover:w-56 bg-[#18181b] border-r border-[#27272a] flex flex-col justify-between items-center py-4 z-40 shrink-0 transition-all duration-300 group overflow-hidden -translate-x-full md:translate-x-0 shadow-2xl md:shadow-none">
-        <div class="flex flex-col items-center space-y-3 w-full px-2 mt-14 md:mt-0">
-            
-            <!-- Botão 1: Dashboard -->
+<!-- BARRA DE NAVEGAÇÃO INFERIOR MOBILE (Fixa no rodapé para telas pequenas) -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#18181b] border-t border-[#27272a] flex items-center justify-around z-40 px-2 shadow-2xl">
+        <button onclick="alternarVisualizacao('inicio')" id="btn-nav-inicio-mob" class="flex flex-col items-center justify-center w-full py-1 text-[#a1a1aa] hover:text-white transition-colors">
+            <i data-lucide="layout-grid" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium mt-1">Início</span>
+        </button>
+
+        <button onclick="alternarVisualizacao('cozinha')" id="btn-nav-cozinha-mob" class="flex flex-col items-center justify-center w-full py-1 text-[#a1a1aa] hover:text-white transition-colors">
+            <i data-lucide="utensils" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium mt-1">Cozinha</span>
+        </button>
+
+        <button onclick="alternarVisualizacao('estoque')" id="btn-nav-estoque-mob" class="flex flex-col items-center justify-center w-full py-1 text-[#d946ef] transition-colors">
+            <i data-lucide="store" class="w-5 h-5"></i>
+            <span class="text-[10px] font-bold mt-1">Estoque</span>
+        </button>
+
+        <button onclick="alternarVisualizacao('ficha')" id="btn-nav-ficha-mob" class="flex flex-col items-center justify-center w-full py-1 text-[#a1a1aa] hover:text-white transition-colors">
+            <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium mt-1">Ficha Tec.</span>
+        </button>
+
+        <button onclick="alternarVisualizacao('vendas')" id="btn-nav-vendas-mob" class="flex flex-col items-center justify-center w-full py-1 text-[#a1a1aa] hover:text-white hover:text-white transition-colors">
+            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium mt-1">Vendas</span>
+        </button>
+    </nav>
+
+    <!-- SIDEBAR DESKTOP (Aparece apenas em PC / Tablet - hidden em mobile) -->
+    <aside class="hidden md:flex w-16 hover:w-56 bg-[#18181b] border-r border-[#27272a] flex-col justify-between items-center py-4 z-20 shrink-0 transition-all duration-300 group overflow-hidden">
+        <div class="flex flex-col items-center space-y-3 w-full px-2">
             <button onclick="alternarVisualizacao('inicio')" id="btn-nav-inicio" class="w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors">
                 <i data-lucide="layout-grid" class="w-5 h-5 shrink-0"></i>
-                <span class="text-sm font-medium opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity whitespace-nowrap">Dashboard</span>
+                <span class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Dashboard</span>
             </button>
 
-            <!-- Botão 2: Cozinha -->
             <button onclick="alternarVisualizacao('cozinha')" id="btn-nav-cozinha" class="w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors">
                 <i data-lucide="utensils" class="w-5 h-5 shrink-0"></i>
-                <span class="text-sm font-medium opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity whitespace-nowrap">Cozinha</span>
+                <span class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Cozinha</span>
             </button>
 
-            <!-- Botão 3: Estoque -->
             <button id="btn-nav-estoque" onclick="alternarVisualizacao('estoque')" class="w-full flex items-center gap-3 p-2.5 text-[#d946ef] bg-[#27272a] rounded-xl transition-colors">
                 <i data-lucide="store" class="w-5 h-5 shrink-0"></i>
-                <span class="text-sm font-medium opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity whitespace-nowrap">Estoque</span>
+                <span class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Estoque</span>
             </button>
 
-            <!-- Botão 4: Ficha Técnica -->
             <button id="btn-nav-ficha" onclick="alternarVisualizacao('ficha')" class="w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors">
                 <i data-lucide="clipboard-list" class="w-5 h-5 shrink-0"></i>
-                <span class="text-sm font-medium opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity whitespace-nowrap">Ficha Técnica</span>
+                <span class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Ficha Técnica</span>
             </button>
 
-            <!-- Botão 5: Vendas -->
             <button onclick="alternarVisualizacao('vendas')" id="btn-nav-vendas" class="w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors">
                 <i data-lucide="shopping-cart" class="w-5 h-5 shrink-0"></i>
-                <span class="text-sm font-medium opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity whitespace-nowrap">Vendas</span>
+                <span class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Vendas</span>
             </button>
 
-            <!-- Botão 6: Financeiro -->
             <button onclick="alternarVisualizacao('financeiro')" id="btn-nav-financeiro" class="w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors">
                 <i data-lucide="dollar-sign" class="w-5 h-5 shrink-0"></i>
-                <span class="text-sm font-medium opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity whitespace-nowrap">Financeiro</span>
+                <span class="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Financeiro</span>
             </button>
-
         </div>
 
         <div class="px-3 w-full flex items-center gap-3">
             <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 p-[2px] shrink-0">
                 <div class="w-full h-full bg-[#18181b] rounded-full flex items-center justify-center"><span class="text-xs font-bold text-white">R</span></div>
             </div>
-            <span class="text-xs font-bold text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity whitespace-nowrap">Kaio Lima</span>
+            <span class="text-xs font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Kaio Lima</span>
         </div>
     </aside>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="flex-1 flex flex-col h-full overflow-hidden bg-[#121214] mt-14 md:mt-0">
-        
+
+    
+    <!-- CONTEÚDO PRINCIPAL (Espaço extra no rodapé do mobile pb-16 para não cobrir itens com a barra) -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-[#121214] pb-16 md:pb-0">        
         <!-- VIEW DO ESTOQUE -->
         <div id="view-estoque" class="flex-1 flex flex-col h-full overflow-hidden">
             <header class="p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[#1f1f23]">
