@@ -235,12 +235,14 @@ window.salvarProduto = async function(e) {
     }
 };
 
-// CONTROLE DO MENU MOBILE (ABRIR / FECHAR)
+// CONTROLE DO MENU MOBILE (ABRIR / FECHAR COM BACKDROP)
 function toggleMenuMobile() {
     const sidebar = document.getElementById('sidebar-mobile');
-    if (sidebar) {
-        // Alterna entre mostrar (translate-x-0) e esconder (-translate-x-full)
+    const backdrop = document.getElementById('backdrop-mobile');
+    
+    if (sidebar && backdrop) {
         sidebar.classList.toggle('-translate-x-full');
+        backdrop.classList.toggle('hidden');
     }
 }
 
@@ -271,13 +273,14 @@ function alternarVisualizacao(rota) {
         alert(`A aba "${rota}" será aberta em breve!`);
     }
 
-    // Fecha o menu automaticamente no telemóvel ao escolher uma aba
+    // Fecha a sidebar e esconde o backdrop automaticamente no telemóvel
     const sidebar = document.getElementById('sidebar-mobile');
+    const backdrop = document.getElementById('backdrop-mobile');
     if (sidebar && window.innerWidth < 768) {
         sidebar.classList.add('-translate-x-full');
+        if (backdrop) backdrop.classList.add('hidden');
     }
 }
-
 
 // 7. CARREGAR RECEITAS NO SELETOR
 async function carregarReceitasFicha() {

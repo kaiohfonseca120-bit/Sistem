@@ -16,22 +16,13 @@
 </head>
 <body class="bg-[#121214] text-gray-200 font-sans antialiased flex h-screen overflow-hidden">
 
-    <!-- BOTÃO HAMBÚRGUER MOBILE (Visível apenas em telas pequenas) -->
-    <div class="md:hidden fixed top-0 left-0 right-0 h-14 bg-[#18181b] border-b border-[#27272a] flex items-center justify-between px-4 z-30">
-        <div class="flex items-center gap-2">
-            <button onclick="toggleMenuMobile()" class="p-2 text-white hover:bg-[#27272a] rounded-lg">
-                <i data-lucide="menu" class="w-6 h-6"></i>
-            </button>
-            <span class="font-bold text-white text-sm">Kero Salgados</span>
-        </div>
-        <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 p-[2px]">
-            <div class="w-full h-full bg-[#18181b] rounded-full flex items-center justify-center"><span class="text-[10px] font-bold text-white">R</span></div>
-        </div>
-    </div>
-
 
     <!-- SIDEBAR -->
-<aside id="sidebar-mobile" class="fixed md:static inset-y-0 left-0 w-64 md:w-16 md:hover:w-56 bg-[#18181b] border-r border-[#27272a] flex flex-col justify-between items-center py-4 z-40 shrink-0 transition-all duration-300 group overflow-hidden -translate-x-full md:translate-x-0">        <div class="flex flex-col items-center space-y-3 w-full px-2 mt-12 md:mt-0">
+<div id="backdrop-mobile" onclick="toggleMenuMobile()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden transition-opacity"></div>
+
+    <!-- SIDEBAR (Com largura ideal para mobile e o efeito gaveta) -->
+    <aside id="sidebar-mobile" class="fixed md:static inset-y-0 left-0 w-64 md:w-16 md:hover:w-56 bg-[#18181b] border-r border-[#27272a] flex flex-col justify-between items-center py-4 z-40 shrink-0 transition-all duration-300 group overflow-hidden -translate-x-full md:translate-x-0 shadow-2xl md:shadow-none">
+        <div class="flex flex-col items-center space-y-3 w-full px-2 mt-14 md:mt-0">
             
             <!-- Botão 1: Dashboard -->
             <button onclick="alternarVisualizacao('inicio')" id="btn-nav-inicio" class="w-full flex items-center gap-3 p-2.5 text-[#a1a1aa] hover:text-white hover:bg-[#27272a] rounded-xl transition-colors">
@@ -78,7 +69,6 @@
             <span class="text-xs font-bold text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity whitespace-nowrap">Kaio Lima</span>
         </div>
     </aside>
-
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="flex-1 flex flex-col h-full overflow-hidden bg-[#121214] mt-14 md:mt-0">
